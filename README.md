@@ -7,7 +7,7 @@ Laravel Socket Chat Application
 - NPM 7.18.1
 
 ## How to install
-Install PHP dependancy using the <a href="https://getcomposer.org/" title="Composer">Composer</a>
+Install PHP dependancy using the <a href="https://getcomposer.org/" title="Composer" target="_blank">Composer</a>
 ```
 composer install
 ```
