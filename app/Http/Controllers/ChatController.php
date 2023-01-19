@@ -96,13 +96,17 @@ class ChatController extends Controller
 
             $messages = Message::select(array(
                 'id', 'sender_id', 'receiver_id', 'message', 'created_at',
-            ))->where(array(
-                'sender_id' => auth()->id(),
-                'receiver_id' => $request->id,
-            ))->orWhere(array(
-                'sender_id' => $request->id,
-                'receiver_id' => auth()->id(),
-            ))->oldest()->groupBy('created_at')->get();
+            ))->where(function($query) use ( $request ) {
+                $query->where(array(
+                    'sender_id' => auth()->id(),
+                    'receiver_id' => $request->id,
+                ));
+            })->orWhere(function($query) use ( $request ) {
+                $query->where(array(
+                    'sender_id' => $request->id,
+                    'receiver_id' => auth()->id(),
+                ));
+            })->oldest()->groupBy('created_at')->get();
 
             $this->data = array(
                 'user' => $user,
