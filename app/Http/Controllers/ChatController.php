@@ -88,13 +88,16 @@ class ChatController extends Controller
 
     public function showUserChat( Request $request ) {
         if ( $request->ajax() ) {
+            $limit = $request->limit ?? 0;
+            $offset = $request->offset ?? 10;
+
             $user = User::select(array(
                 'id', 'name', 'availability_status',
             ))->where(array(
                 'id' => $request->id, // receiver id
             ))->first();
 
-            $messages = Message::select(array(
+            $messagesQuery = Message::select(array(
                 'id', 'sender_id', 'receiver_id', 'message', 'created_at',
             ))->where(function($query) use ( $request ) {
                 $query->where(array(
@@ -106,13 +109,21 @@ class ChatController extends Controller
                     'sender_id' => $request->id,
                     'receiver_id' => auth()->id(),
                 ));
-            })->oldest()->groupBy('created_at')->get();
+            })->oldest()->groupBy('created_at');
+
+            // $messages = $messagesQuery->get();
+            $messages = $messagesQuery->skip( $limit )->take( $offset )->get();
 
             $this->data = array(
                 'user' => $user,
                 'messages' => $messages,
             );
-            $view = view('components.chat.chat-screen', $this->data)->render();
+
+            if ( $limit ) {
+                $view = view('components.chat.chat-view', $this->data)->render();
+            } else {
+                $view = view('components.chat.chat-screen', $this->data)->render();
+            }
 
             $this->data = array(
                 'status' => true,
@@ -154,6 +165,7 @@ class ChatController extends Controller
                 $this->data = array(
                     'chat' => $message,
                     'receiverUser' => $user,
+                    'isLastMessage' => false,
                 );
 
                 $view = view('components.chat.chat-history', $this->data)->render();
@@ -184,6 +196,7 @@ class ChatController extends Controller
             $this->data = array(
                 'chat' => $message,
                 'receiverUser' => $user,
+                'isLastMessage' => false,
             );
 
             $view = view('components.chat.chat-history', $this->data)->render();

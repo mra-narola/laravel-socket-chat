@@ -23,14 +23,22 @@ class ChatHistory extends Component
     public $receiverUser;
 
     /**
+     * For load more chats flag
+     * 
+     * @var bool
+     */
+    public $isLastMessage;
+
+    /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct( Message $chat, User $receiverUser )
+    public function __construct( Message $chat, User $receiverUser, bool $isLastMessage )
     {
         $this->chat = $chat;
         $this->receiverUser = $receiverUser;
+        $this->isLastMessage = $isLastMessage;
     }
 
     /**

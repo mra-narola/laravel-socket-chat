@@ -1,5 +1,5 @@
 @if ( $receiverUser->id == $chat->receiver_id )
-    <div class="pt-4 flex flex-col justify-end text-right">
+    <div class="message-panel pt-4 flex flex-col justify-end text-right" {{ $isLastMessage ? 'data-load-more=true' : '' }}>
         <div class="rounded-lg bg-white text-slate-900 shadow-xl shadow-black/5 ring-1 p-3 flex flex-col self-end max-w-4xl">
             <span class="text-normal text-left">{!! $chat->message !!}</span>
             <div class="text-right">
@@ -8,7 +8,7 @@
         </div>
     </div>
 @else
-    <div class="pt-4 flex flex-col justify-start">
+    <div class="message-panel pt-4 flex flex-col justify-start" {{ $isLastMessage ? 'data-load-more=true' : '' }}>
         <span class="font-medium text-sm font-semibold">{{ $chat->selfUser->name }}</span>
         <div class="rounded-lg bg-white text-slate-900 shadow-xl shadow-black/5 ring-1 p-3 flex flex-col self-start max-w-4xl">
             <span class="text-normal">{!! $chat->message !!}</span>
